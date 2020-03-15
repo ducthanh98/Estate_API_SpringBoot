@@ -1,6 +1,6 @@
 package com.fushi.serviceImpl;
 
-import com.fushi.util.Notifications;
+import com.fushi.config.Notifications;
 import com.fushi.dto.ResponseCode;
 import com.fushi.dto.auth.ro.AuthenticationInformation;
 import com.fushi.dto.auth.ro.UserRO;
@@ -8,6 +8,7 @@ import com.fushi.model.UserModel;
 import com.fushi.repository.UserRepository;
 import com.fushi.service.UserService;
 import com.fushi.util.JwtProvider;
+import com.fushi.util.MailProvider;
 import com.fushi.util.Response;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -15,12 +16,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.UUID;
 
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private MailProvider mailProvider;
 
     private final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
     private ModelMapper modelMapper = new ModelMapper();
@@ -64,14 +68,27 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Response<String> register(UserModel userModel) {
+    public Response register(UserModel data) {
+        Response response = new Response();
         try{
-            
+
+            var isExist = this.userRepository.existsByEmail(data.getEmail());
+            if(isExist){
+                return response.setStatusCode(ResponseCode.ERROR).setMessage(Notifications.EMAIL_EXIST);
+            }
+
+            UUID uuid = UUID.randomUUID();
+            data.setCode(uuid.toString());
+            userRepository.save(data);
+
+
+            mailProvider.sendMail(data.getEmail(),data.getCode());
+            return response.setStatusCode(ResponseCode.SUCCESS).setMessage(Notifications.SUCCESS);
 
         }catch (Exception e){
-
+            logger.error(e.toString());
+            return response.setStatusCode(ResponseCode.ERROR).setMessage(Notifications.ERROR);
         }
-        return null;
     }
 
 }

@@ -1,5 +1,9 @@
 package com.fushi.model;
+import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 
 
 @Entity
@@ -7,21 +11,26 @@ import javax.persistence.*;
 public class UserModel {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy= GenerationType.AUTO,generator="native")
+    @GenericGenerator(name = "native",strategy = "native")
     @Column(name = "id")
     private Integer id;
 
     @Column(name = "name",nullable = false)
+    @NotEmpty(message = "Name is required")
     private String name;
 
     @Column(name = "email",nullable = false)
+    @NotEmpty(message = "Email is required")
+    @Email(message = "Email is invalid")
     private String email;
 
     @Column(name = "password",nullable = false)
+    @NotEmpty(message = "Password is required")
     private String password;
 
-    @Column(name = "avatar",nullable = false)
-    private String avatar;
+    @Column(name = "avatar",columnDefinition = "default 'avatar.jpg'")
+    private String avatar="avatar.jpg";
 
     @Column(name = "phone")
     private String phone;
@@ -33,7 +42,7 @@ public class UserModel {
     private String skype;
 
     @Column(name = "role")
-    private Integer role;
+    private Integer role=3;
 
     @Column(name = "active")
     private boolean active;

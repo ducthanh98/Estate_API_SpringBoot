@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
         "com.fushi.serviceImpl",
         "com.fushi.exception",
         "com.fushi.controller",
+        "com.fushi.util",
         "com.fushi.config"})
 @EnableJpaRepositories(basePackages = {"com.fushi.repository"})
 public class MainApplication {

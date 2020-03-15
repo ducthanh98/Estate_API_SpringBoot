@@ -7,7 +7,7 @@ public class UserRO {
     private String phone;
     private String facebook;
     private String skype;
-    private Integer role;
+    private String role;
     private String avatar;
     private Boolean  active;
 
@@ -59,11 +59,11 @@ public class UserRO {
         this.skype = skype;
     }
 
-    public Integer getRole() {
+    public String getRole() {
         return role;
     }
 
-    public void setRole(Integer role) {
+    public void setRole(String role) {
         this.role = role;
     }
 
