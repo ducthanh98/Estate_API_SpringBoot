@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -91,4 +92,28 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+
+    @Override
+    public Response active(Integer id,String code) {
+        Response response = new Response();
+        try{
+
+            Optional<UserModel> account = this.userRepository.findById(id);
+            if(account == null){
+                return response.setStatusCode(ResponseCode.ERROR).setMessage(Notifications.ACCOUNT_NOT_EXIST);
+            }
+
+           if(account.get().getCode().equals(code)){
+                account.get().setCode("");
+                account.get().setActive(true);
+           }
+
+
+            return response.setStatusCode(ResponseCode.SUCCESS).setMessage(Notifications.SUCCESS);
+
+        }catch (Exception e){
+            logger.error(e.toString());
+            return response.setStatusCode(ResponseCode.ERROR).setMessage(Notifications.ERROR);
+        }
+    }
 }

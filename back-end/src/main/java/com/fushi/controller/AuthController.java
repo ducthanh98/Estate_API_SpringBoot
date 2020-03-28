@@ -6,10 +6,7 @@ import com.fushi.model.UserModel;
 import com.fushi.service.UserService;
 import com.fushi.util.Response;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -30,5 +27,11 @@ public class AuthController {
     public Response register(@Valid @RequestBody UserModel body){
 
         return userService.register(body);
+    }
+
+    @GetMapping(path = "/active/{id}/{code}",produces="application/json", consumes = "application/json")
+    public Response active(@PathVariable Integer id,@PathVariable String code){
+
+        return userService.active(id,code);
     }
 }
