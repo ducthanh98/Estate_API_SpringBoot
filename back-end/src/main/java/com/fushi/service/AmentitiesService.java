@@ -1,11 +1,16 @@
 package com.fushi.service;
 
-import com.fushi.dto.auth.ro.AuthenticationInformation;
-import com.fushi.model.UserModel;
+import com.fushi.model.AmentitiesModel;
+import com.fushi.util.PaginationRequest;
+import com.fushi.util.PaginationResponse;
 import com.fushi.util.Response;
+import org.springframework.data.domain.Page;
+
+import java.util.List;
 
 public interface AmentitiesService {
-    Response<AuthenticationInformation> login(String email, String password);
-    Response register(UserModel userModel);
-    Response active(Integer id,String code);
+    Response<List<AmentitiesModel>> getAll();
+    Response insertOrUpdate(AmentitiesModel amentities);
+    Response delete(Integer id);
+    Response<PaginationResponse<AmentitiesModel>> getAllBy(PaginationRequest pagePaginationRequest);
 }

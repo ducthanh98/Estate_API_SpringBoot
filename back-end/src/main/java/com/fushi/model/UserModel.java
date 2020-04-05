@@ -29,7 +29,7 @@ public class UserModel {
     @NotEmpty(message = "Password is required")
     private String password;
 
-    @Column(name = "avatar",columnDefinition = "default 'avatar.jpg'")
+    @Column(name = "avatar")
     private String avatar="avatar.jpg";
 
     @Column(name = "phone")

@@ -8,12 +8,13 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @SpringBootApplication
 @ComponentScan(
         basePackages = {
-        "com.fushi.serviceImpl",
-        "com.fushi.exception",
-        "com.fushi.controller",
-        "com.fushi.util",
-        "com.fushi.config",
-        "com.fushi.security"})
+                "com.fushi.service",
+                "com.fushi.serviceImpl",
+                "com.fushi.exception",
+                "com.fushi.controller",
+                "com.fushi.util",
+                "com.fushi.config",
+                "com.fushi.security"})
 @EnableJpaRepositories(basePackages = {"com.fushi.repository"})
 public class MainApplication {
 

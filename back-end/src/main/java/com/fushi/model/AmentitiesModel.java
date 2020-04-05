@@ -2,13 +2,11 @@ package com.fushi.model;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
-
+@Entity
+@Table(name = "amentities")
 public class AmentitiesModel {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO,generator="native")
