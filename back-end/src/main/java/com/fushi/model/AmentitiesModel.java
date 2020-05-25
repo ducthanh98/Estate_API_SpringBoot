@@ -5,6 +5,8 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import java.util.List;
+
 @Entity
 @Table(name = "amentities")
 public class AmentitiesModel {
@@ -21,6 +23,11 @@ public class AmentitiesModel {
     @Column(name = "icon",nullable = false)
     @NotEmpty(message = "Icon is required")
     private String icon;
+
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    private List<HouseModel> houses;
+
 
     public Integer getId() {
         return id;

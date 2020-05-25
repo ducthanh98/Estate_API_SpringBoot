@@ -4,10 +4,11 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import java.util.List;
 
 
 @Entity
-@Table(name = "account")
+@Table(name = "accounts")
 public class UserModel {
 
     @Id
@@ -52,6 +53,18 @@ public class UserModel {
 
     @Column(name = "code")
     private String code;
+
+    @Column(name = "imgName",nullable = false)
+    private String imgName;
+
+    @OneToMany(mappedBy = "author",cascade = CascadeType.ALL)
+    private List<ReportModel> reports;
+
+    @OneToMany(mappedBy = "author",cascade = CascadeType.ALL)
+    private List<HouseModel> houses;
+
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    private List<CommentModel> comments;
 
     public Integer getId() {
         return id;
