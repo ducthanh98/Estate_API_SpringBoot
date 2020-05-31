@@ -1,4 +1,4 @@
-package com.fushi.controller;
+package com.fushi.controller.admin;
 
 
 import com.fushi.model.AmentitiesModel;
@@ -19,7 +19,7 @@ public class AmentitiesController {
     @Autowired
     private AmentitiesService amentitiesService;
 
-    @GetMapping(path = "/getAll",produces="application/json", consumes = "application/json")
+    @GetMapping(path = "/getAll")
     public Response<List<AmentitiesModel>> getAll(){
 
         return amentitiesService.getAll();
@@ -45,7 +45,7 @@ public class AmentitiesController {
 
     }
 
-    @GetMapping(path = "/delete/{id}",produces="application/json", consumes = "application/json")
+    @GetMapping(path = "/delete/{id}")
     public Response delete(@PathVariable("id") Integer id){
 
         return amentitiesService.delete(id);

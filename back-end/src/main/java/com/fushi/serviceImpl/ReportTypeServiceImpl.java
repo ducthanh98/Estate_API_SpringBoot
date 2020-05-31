@@ -3,8 +3,10 @@ package com.fushi.serviceImpl;
 import com.fushi.config.Notifications;
 import com.fushi.dto.ResponseCode;
 import com.fushi.model.AmentitiesModel;
+import com.fushi.model.ReportTypeModel;
 import com.fushi.repository.AmentitiesRepository;
-import com.fushi.service.AmentitiesService;
+import com.fushi.repository.ReportTypeRepository;
+import com.fushi.service.ReportTypeService;
 import com.fushi.util.PaginationRequest;
 import com.fushi.util.PaginationResponse;
 import com.fushi.util.Response;
@@ -15,40 +17,23 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 
 @Service
-public class AmentitiesServiceImpl implements AmentitiesService {
+public class ReportTypeServiceImpl implements ReportTypeService {
+
     @Autowired
-    private AmentitiesRepository amentitiesRepository;
-    private final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+    private ReportTypeRepository reportTypeRepository;
+    private final Logger logger = LoggerFactory.getLogger(ReportTypeServiceImpl.class);
+
 
     @Override
-    public Response<List<AmentitiesModel>> getAll() {
-        Response response = new Response<List<AmentitiesModel>>();
+    public Response<PaginationResponse<ReportTypeModel>> getAllBy(PaginationRequest pagePaginationRequest) {
+        Response<PaginationResponse<ReportTypeModel>> response = new  Response<PaginationResponse<ReportTypeModel>>();
 
         try{
+            Page<ReportTypeModel> pagination = reportTypeRepository.findAll(PageRequest.of(pagePaginationRequest.getPageNumber() - 1, pagePaginationRequest.getPageSize()));
 
-            List<AmentitiesModel> list = amentitiesRepository.findAll();
-
-            return response.setStatusCode(ResponseCode.SUCCESS).setMessage(Notifications.SUCCESS).setData(list);
-
-        } catch (Exception e){
-
-            logger.error(e.toString());
-            return response.setStatusCode(ResponseCode.ERROR).setMessage(Notifications.ERROR);
-
-        }
-    }
-
-    @Override
-    public Response<PaginationResponse<AmentitiesModel>> getAllBy(PaginationRequest pagePaginationRequest) {
-        Response<PaginationResponse<AmentitiesModel>> response = new  Response<PaginationResponse<AmentitiesModel>>();
-
-        try{
-            Page<AmentitiesModel> pagination = amentitiesRepository.findAll(PageRequest.of(pagePaginationRequest.getPageNumber() - 1, pagePaginationRequest.getPageSize()));
-
-            PaginationResponse<AmentitiesModel> list = new PaginationResponse<AmentitiesModel>();
+            PaginationResponse<ReportTypeModel> list = new PaginationResponse<ReportTypeModel>();
             list.setList(pagination.getContent());
             list.setTotal(pagination.getTotalPages());
 
@@ -64,11 +49,11 @@ public class AmentitiesServiceImpl implements AmentitiesService {
     }
 
     @Override
-    public Response insertOrUpdate(AmentitiesModel amentities) {
+    public Response insert(ReportTypeModel reportType) {
         Response response = new Response();
         try{
 
-            this.amentitiesRepository.save(amentities);
+            this.reportTypeRepository.save(reportType);
 
             return response.setStatusCode(ResponseCode.SUCCESS).setMessage(Notifications.SUCCESS);
 
@@ -79,11 +64,19 @@ public class AmentitiesServiceImpl implements AmentitiesService {
     }
 
     @Override
-    public Response delete(Integer id) {
+    public Response update(ReportTypeModel model,Integer id) {
         Response response = new Response();
         try{
 
-            this.amentitiesRepository.deleteById(id);
+            var reportType = this.reportTypeRepository.findById(id);
+
+            if(reportType.get() == null){
+                return response.setStatusCode(ResponseCode.ERROR).setMessage(Notifications.NOT_FOUND);
+            }
+
+            reportType.get().setReportContent(model.getReportContent());
+
+            this.reportTypeRepository.save(reportType.get());
 
             return response.setStatusCode(ResponseCode.SUCCESS).setMessage(Notifications.SUCCESS);
 
@@ -92,4 +85,21 @@ public class AmentitiesServiceImpl implements AmentitiesService {
             return response.setStatusCode(ResponseCode.ERROR).setMessage(Notifications.ERROR);
         }
     }
+
+
+    @Override
+    public Response delete(Integer id) {
+        Response response = new Response();
+        try{
+
+            this.reportTypeRepository.deleteById(id);
+
+            return response.setStatusCode(ResponseCode.SUCCESS).setMessage(Notifications.SUCCESS);
+
+        }catch (Exception e){
+            logger.error(e.toString());
+            return response.setStatusCode(ResponseCode.ERROR).setMessage(Notifications.ERROR);
+        }
+    }
+
 }

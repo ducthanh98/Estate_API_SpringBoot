@@ -16,7 +16,7 @@ public class ReportTypeModel {
     private Integer id;
 
     @Column(name = "reportContent",nullable = false)
-    @NotEmpty(message = "ReportContent is required")
+    @NotEmpty(message = "Report Content is required")
     private String reportContent;
 
     @OneToMany(mappedBy = "reportType")

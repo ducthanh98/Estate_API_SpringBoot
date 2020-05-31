@@ -5,6 +5,7 @@ import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
 
@@ -26,34 +27,32 @@ public class HouseModel {
     private String location;
 
     @Column(name = "lat",nullable = false)
-    @NotEmpty(message = "Lat is required")
-    private Integer lat;
+    @NotNull(message = "Lat is required")
+    private Float lat;
 
 
     @Column(name = "lng",nullable = false)
-    @NotEmpty(message = "Lng is required")
-    private Integer lng;
+    @NotNull(message = "Lng is required")
+    private Float lng;
 
 
     @Column(name = "bedrooms",nullable = false)
-    @NotEmpty(message = "Bedrooms is required")
+    @NotNull(message = "Bedrooms is required")
     private Integer bedrooms;
 
 
     @Column(name = "bathrooms",nullable = false)
-    @NotEmpty(message = "Bathrooms is required")
+    @NotNull(message = "Bathrooms is required")
     private Integer bathrooms;
 
-    @Column(name = "status",nullable = false)
-    @NotEmpty(message = "Status is required")
-    private Boolean status;
+    private Boolean status = false;
 
     @Column(name = "area",nullable = false)
-    @NotEmpty(message = "Area is required")
+    @NotNull(message = "Area is required")
     private Float area;
 
     @Column(name = "price",nullable = false)
-    @NotEmpty(message = "Price is required")
+    @NotNull(message = "Price is required")
     private Float price;
 
     @Column(name = "description",nullable = false)
@@ -103,19 +102,19 @@ public class HouseModel {
         this.location = location;
     }
 
-    public Integer getLat() {
+    public Float getLat() {
         return lat;
     }
 
-    public void setLat(Integer lat) {
+    public void setLat(Float lat) {
         this.lat = lat;
     }
 
-    public Integer getLng() {
+    public Float getLng() {
         return lng;
     }
 
-    public void setLng(Integer lng) {
+    public void setLng(Float lng) {
         this.lng = lng;
     }
 

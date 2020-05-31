@@ -1,8 +1,11 @@
 package com.fushi.config;
 
 public class Notifications {
+
     public static String SUCCESS="Success";
     public static String ERROR="An error has occurred. Please try again later !";
+    public static String NOT_FOUND="Not found";
+
     public static String EMAIL_PASS_INCORRECT ="Incorrect information. Please check again";
     public static String EMAIL_EXIST ="Email already exists. Please choose another email";
     public static String ACCOUNT_NOT_EXIST ="Account doesn't exist";

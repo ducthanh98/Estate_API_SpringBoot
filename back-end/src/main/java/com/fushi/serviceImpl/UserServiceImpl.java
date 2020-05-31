@@ -2,18 +2,21 @@ package com.fushi.serviceImpl;
 
 import com.fushi.config.Notifications;
 import com.fushi.dto.ResponseCode;
+import com.fushi.dto.auth.dto.ChangePassDTO;
+import com.fushi.dto.auth.dto.UserInfoDTO;
 import com.fushi.dto.auth.ro.AuthenticationInformation;
 import com.fushi.dto.auth.ro.UserRO;
+import com.fushi.model.ReportTypeModel;
 import com.fushi.model.UserModel;
 import com.fushi.repository.UserRepository;
 import com.fushi.service.UserService;
-import com.fushi.util.JwtProvider;
-import com.fushi.util.MailProvider;
-import com.fushi.util.Response;
+import com.fushi.util.*;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -43,7 +46,7 @@ public class UserServiceImpl implements UserService {
 
                 return response.setStatusCode(ResponseCode.ERROR).setMessage(Notifications.EMAIL_PASS_INCORRECT);
 
-            } else if(!userModel.isActive()) {
+            } else if(!userModel.getActive()) {
 
                 return response.setStatusCode(ResponseCode.ERROR).setMessage(Notifications.USER_NOT_ACTIVE);
 
@@ -116,4 +119,105 @@ public class UserServiceImpl implements UserService {
             return response.setStatusCode(ResponseCode.ERROR).setMessage(Notifications.ERROR);
         }
     }
+
+    @Override
+    public Response<PaginationResponse<UserModel>> getAllBy(PaginationRequest pagePaginationRequest) {
+        Response<PaginationResponse<UserModel>> response = new  Response<PaginationResponse<UserModel>>();
+
+        try{
+            Page<UserModel> pagination = userRepository.findAll(PageRequest.of(pagePaginationRequest.getPageNumber() - 1, pagePaginationRequest.getPageSize()));
+
+            PaginationResponse<UserModel> list = new PaginationResponse<UserModel>();
+            list.setList(pagination.getContent());
+            list.setTotal(pagination.getTotalPages());
+
+
+            return response.setStatusCode(ResponseCode.SUCCESS).setMessage(Notifications.SUCCESS).setData(list);
+
+        } catch (Exception e){
+
+            logger.error(e.toString());
+            return response.setStatusCode(ResponseCode.ERROR).setMessage(Notifications.ERROR);
+
+        }
+    }
+
+    @Override
+    public Response updateUserInfo(Integer id, UserInfoDTO user) {
+        Response response = new Response();
+        try{
+
+            var account = this.userRepository.findById(id).get();
+            if(account == null){
+                return response.setStatusCode(ResponseCode.ERROR).setMessage(Notifications.ACCOUNT_NOT_EXIST);
+            }
+
+            account.setName(user.getName());
+            account.setPhone(user.getPhone());
+            account.setFacebook(user.getFacebook());
+            account.setSkype(user.getSkype());
+
+            userRepository.save(account);
+
+            return response.setStatusCode(ResponseCode.SUCCESS).setMessage(Notifications.SUCCESS);
+
+        }catch (Exception e){
+            logger.error(e.toString());
+            return response.setStatusCode(ResponseCode.ERROR).setMessage(Notifications.ERROR);
+        }
+    }
+
+    @Override
+    public Response changePassword(Integer id, ChangePassDTO info) {
+        Response response = new Response();
+        try{
+
+            var account = this.userRepository.findById(id).get();
+            if(account == null){
+                return response.setStatusCode(ResponseCode.ERROR).setMessage(Notifications.ACCOUNT_NOT_EXIST);
+            }
+
+            if(!account.getPassword().equals(info.getOldPass())){
+                return response.setStatusCode(ResponseCode.ERROR).setMessage(Notifications.EMAIL_PASS_INCORRECT);
+            }
+
+            account.setPassword(info.getPassword());
+
+            userRepository.save(account);
+
+            return response.setStatusCode(ResponseCode.SUCCESS).setMessage(Notifications.SUCCESS);
+
+        }catch (Exception e){
+            logger.error(e.toString());
+            return response.setStatusCode(ResponseCode.ERROR).setMessage(Notifications.ERROR);
+        }
+    }
+
+    @Override
+    public Response observe(String email) {
+        Response response = new Response();
+        try{
+            if(email.isEmpty()){
+                return response.setStatusCode(ResponseCode.ERROR).setMessage(Notifications.EMAIL_PASS_INCORRECT);
+
+            }
+
+            UserModel account = this.userRepository.findByEmail(email);
+            if(account == null){
+                return response.setStatusCode(ResponseCode.ERROR).setMessage(Notifications.ACCOUNT_NOT_EXIST);
+            }
+
+
+            account.setSubcribe(true);
+
+            userRepository.save(account);
+
+            return response.setStatusCode(ResponseCode.SUCCESS).setMessage(Notifications.SUCCESS);
+
+        }catch (Exception e){
+            logger.error(e.toString());
+            return response.setStatusCode(ResponseCode.ERROR).setMessage(Notifications.ERROR);
+        }
+    }
+
 }

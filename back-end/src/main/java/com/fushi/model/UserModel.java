@@ -46,16 +46,13 @@ public class UserModel {
     private Integer role=3;
 
     @Column(name = "active")
-    private boolean active;
+    private Boolean active;
 
     @Column(name = "subcribe")
-    private boolean subcribe;
+    private Boolean subcribe;
 
     @Column(name = "code")
     private String code;
-
-    @Column(name = "imgName",nullable = false)
-    private String imgName;
 
     @OneToMany(mappedBy = "author",cascade = CascadeType.ALL)
     private List<ReportModel> reports;
@@ -138,19 +135,19 @@ public class UserModel {
         this.role = role;
     }
 
-    public boolean isActive() {
+    public Boolean getActive() {
         return active;
     }
 
-    public void setActive(boolean active) {
+    public void setActive(Boolean active) {
         this.active = active;
     }
 
-    public boolean isSubcribe() {
+    public Boolean getSubcribe() {
         return subcribe;
     }
 
-    public void setSubcribe(boolean subcribe) {
+    public void setSubcribe(Boolean subcribe) {
         this.subcribe = subcribe;
     }
 
@@ -162,5 +159,27 @@ public class UserModel {
         this.code = code;
     }
 
+    public List<ReportModel> getReports() {
+        return reports;
+    }
 
+    public void setReports(List<ReportModel> reports) {
+        this.reports = reports;
+    }
+
+    public List<HouseModel> getHouses() {
+        return houses;
+    }
+
+    public void setHouses(List<HouseModel> houses) {
+        this.houses = houses;
+    }
+
+    public List<CommentModel> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<CommentModel> comments) {
+        this.comments = comments;
+    }
 }

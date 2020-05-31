@@ -52,4 +52,12 @@ public class AmentitiesModel {
     public void setIcon(String icon) {
         this.icon = icon;
     }
+
+    public List<HouseModel> getHouses() {
+        return houses;
+    }
+
+    public void setHouses(List<HouseModel> houses) {
+        this.houses = houses;
+    }
 }
