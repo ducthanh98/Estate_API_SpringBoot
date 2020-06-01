@@ -1,6 +1,7 @@
 package com.fushi.controller.admin;
 
 
+import com.fushi.dto.amentities.AmentitiesDTO;
 import com.fushi.model.AmentitiesModel;
 import com.fushi.service.AmentitiesService;
 import com.fushi.util.PaginationRequest;
@@ -33,15 +34,15 @@ public class AmentitiesController {
     }
 
     @PostMapping(path = "/create",produces="application/json", consumes = "application/json")
-    public Response create(@Valid @RequestBody AmentitiesModel body){
+    public Response create(@Valid @RequestBody AmentitiesDTO body){
 
-        return amentitiesService.insertOrUpdate(body);
+        return amentitiesService.insert(body);
     }
 
-    @PostMapping(path = "/update",produces="application/json", consumes = "application/json")
-    public Response update(@Valid @RequestBody AmentitiesModel body){
+    @PostMapping(path = "/update/{id}",produces="application/json", consumes = "application/json")
+    public Response update(@Valid @RequestBody AmentitiesDTO body,@PathVariable("id") Integer id){
 
-        return amentitiesService.insertOrUpdate(body);
+        return amentitiesService.update(id,body);
 
     }
 

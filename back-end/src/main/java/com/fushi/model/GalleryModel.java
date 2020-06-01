@@ -22,7 +22,7 @@ public class GalleryModel {
     private String imgName;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonBackReference
+    @JsonBackReference(value = "images")
     private HouseModel post;
 
     public Integer getId() {

@@ -47,7 +47,7 @@ public class HouseServiceImpl implements HouseService {
 
             Pageable pageable = (Pageable) PageRequest.of(0,6, Sort.by(Sort.Direction.DESC,"created"));
 
-            List<HouseModel> list = this.houseRepository.findAll(pageable).getContent();
+            List<HouseModel> list = this.houseRepository.findAllByStatus(false,pageable).getContent();
 
             return response.setStatusCode(ResponseCode.SUCCESS).setMessage(Notifications.SUCCESS).setData(list);
 
@@ -153,11 +153,29 @@ public class HouseServiceImpl implements HouseService {
         Response<PaginationResponse<HouseModel>> response = new  Response<PaginationResponse<HouseModel>>();
 
         try{
-            Page<HouseModel> pagination = houseRepository.findAll(PageRequest.of(pagePaginationRequest.getPageNumber() - 1, pagePaginationRequest.getPageSize()));
+            Page<HouseModel> pagination = houseRepository.findAllByStatus(false,PageRequest.of(pagePaginationRequest.getPageNumber() - 1, pagePaginationRequest.getPageSize()));
 
             PaginationResponse<HouseModel> list = new PaginationResponse<HouseModel>();
             list.setList(pagination.getContent());
             list.setTotal(pagination.getTotalPages());
+
+
+            return response.setStatusCode(ResponseCode.SUCCESS).setMessage(Notifications.SUCCESS).setData(list);
+
+        } catch (Exception e){
+
+            logger.error(e.toString());
+            return response.setStatusCode(ResponseCode.ERROR).setMessage(Notifications.ERROR);
+
+        }
+    }
+
+    @Override
+    public Response<List<HouseModel>> searchAdvanced(String title,String location,Float area,Float area2, Float price,Float price2,Integer bedrooms,Integer bathrooms) {
+        Response<List<HouseModel>> response = new  Response<List<HouseModel>>();
+
+        try{
+            List<HouseModel> list = houseRepository.findAllByStatusAndTitleContainsAndLocationContainsAndAreaBetweenAndPriceBetweenAndBedroomsAndBathrooms(false,title,location,area,area2,price,price2,bedrooms,bathrooms);
 
 
             return response.setStatusCode(ResponseCode.SUCCESS).setMessage(Notifications.SUCCESS).setData(list);

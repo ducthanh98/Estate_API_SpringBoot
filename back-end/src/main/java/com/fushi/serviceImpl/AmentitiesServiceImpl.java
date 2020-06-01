@@ -2,6 +2,7 @@ package com.fushi.serviceImpl;
 
 import com.fushi.config.Notifications;
 import com.fushi.dto.ResponseCode;
+import com.fushi.dto.amentities.AmentitiesDTO;
 import com.fushi.model.AmentitiesModel;
 import com.fushi.repository.AmentitiesRepository;
 import com.fushi.service.AmentitiesService;
@@ -64,11 +65,38 @@ public class AmentitiesServiceImpl implements AmentitiesService {
     }
 
     @Override
-    public Response insertOrUpdate(AmentitiesModel amentities) {
+    public Response insert(AmentitiesDTO amentities) {
         Response response = new Response();
         try{
+            AmentitiesModel amentitiesModel = new AmentitiesModel();
+            amentitiesModel.setName(amentities.getName());
+            amentitiesModel.setIcon(amentities.getIcon());
 
-            this.amentitiesRepository.save(amentities);
+            this.amentitiesRepository.save(amentitiesModel);
+
+            return response.setStatusCode(ResponseCode.SUCCESS).setMessage(Notifications.SUCCESS);
+
+        }catch (Exception e){
+            logger.error(e.toString());
+            return response.setStatusCode(ResponseCode.ERROR).setMessage(Notifications.ERROR);
+        }
+    }
+
+    @Override
+    public Response update(Integer id,AmentitiesDTO amentities) {
+        Response response = new Response();
+        try{
+            AmentitiesModel amentitiesModel = amentitiesRepository.findById(id).get();
+
+            if(amentitiesModel == null){
+                return response.setStatusCode(ResponseCode.ERROR).setMessage(Notifications.NOT_FOUND);
+
+            }
+
+            amentitiesModel.setName(amentities.getName());
+            amentitiesModel.setIcon(amentities.getIcon());
+
+            this.amentitiesRepository.save(amentitiesModel);
 
             return response.setStatusCode(ResponseCode.SUCCESS).setMessage(Notifications.SUCCESS);
 

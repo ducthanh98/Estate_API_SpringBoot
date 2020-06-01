@@ -1,5 +1,6 @@
 package com.fushi.service;
 
+import com.fushi.dto.amentities.AmentitiesDTO;
 import com.fushi.model.AmentitiesModel;
 import com.fushi.util.PaginationRequest;
 import com.fushi.util.PaginationResponse;
@@ -10,7 +11,8 @@ import java.util.List;
 
 public interface AmentitiesService {
     Response<List<AmentitiesModel>> getAll();
-    Response insertOrUpdate(AmentitiesModel amentities);
+    Response insert(AmentitiesDTO amentities);
+    Response update(Integer id,AmentitiesDTO amentities);
     Response delete(Integer id);
     Response<PaginationResponse<AmentitiesModel>> getAllBy(PaginationRequest pagePaginationRequest);
 }

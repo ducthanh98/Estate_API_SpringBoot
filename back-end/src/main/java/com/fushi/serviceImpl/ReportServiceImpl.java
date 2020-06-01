@@ -3,6 +3,7 @@ package com.fushi.serviceImpl;
 import com.fushi.config.Notifications;
 import com.fushi.dto.ResponseCode;
 import com.fushi.dto.report.ReportDTO;
+import com.fushi.dto.report.UpdateReportDTO;
 import com.fushi.model.*;
 import com.fushi.repository.*;
 import com.fushi.service.ReportService;
@@ -54,6 +55,42 @@ public class ReportServiceImpl implements ReportService {
 
 
             this.reportRepository.save(reportModel);
+
+            return response.setStatusCode(ResponseCode.SUCCESS).setMessage(Notifications.SUCCESS);
+
+        }catch (Exception e){
+            logger.error(e.toString());
+            return response.setStatusCode(ResponseCode.ERROR).setMessage(Notifications.ERROR);
+        }
+    }
+
+    @Override
+    public Response update(Integer id, UpdateReportDTO dto) {
+        Response response = new Response();
+        try{
+
+            ReportModel reportModel = reportRepository.findById(id).get();
+
+            if(reportModel == null ){
+                return response.setStatusCode(ResponseCode.ERROR).setMessage(Notifications.NOT_FOUND);
+            }
+
+            reportModel.setStatus(dto.getStatus());
+            this.reportRepository.save(reportModel);
+
+            if(dto.getStatus() == 1){
+
+                HouseModel houseModel = houseRepository.findById(dto.getPostId()).get();
+                houseModel.setStatus(true);
+                houseRepository.save(houseModel);
+
+            } else {
+
+                HouseModel houseModel = houseRepository.findById(dto.getPostId()).get();
+                houseModel.setStatus(false);
+                houseRepository.save(houseModel);
+
+            }
 
             return response.setStatusCode(ResponseCode.SUCCESS).setMessage(Notifications.SUCCESS);
 

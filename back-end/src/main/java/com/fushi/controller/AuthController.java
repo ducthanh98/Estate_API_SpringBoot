@@ -2,6 +2,7 @@ package com.fushi.controller;
 
 import com.fushi.dto.auth.dto.ChangePassDTO;
 import com.fushi.dto.auth.dto.LoginDTO;
+import com.fushi.dto.auth.dto.UserDTO;
 import com.fushi.dto.auth.dto.UserInfoDTO;
 import com.fushi.dto.auth.ro.AuthenticationInformation;
 import com.fushi.model.AmentitiesModel;
@@ -37,9 +38,15 @@ public class AuthController {
     }
 
     @PostMapping(path = "/register",produces="application/json", consumes = "application/json")
-    public Response register(@Valid @RequestBody UserModel body){
+    public Response register(@Valid @RequestBody UserDTO body){
 
         return userService.register(body);
+    }
+
+    @PostMapping(path = "/update/{id}",produces="application/json", consumes = "application/json")
+    public Response update(@Valid @RequestBody UserDTO body, @PathVariable Integer id){
+
+        return userService.update(id,body);
     }
 
     @PostMapping(path = "/updateInfo/{id}",produces="application/json", consumes = "application/json")

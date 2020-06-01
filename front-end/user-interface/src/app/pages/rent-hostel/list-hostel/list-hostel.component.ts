@@ -40,7 +40,7 @@ export class ListHostelComponent implements OnInit, AfterViewInit {
         (res: IResponse<any>) => {
           if (res.statusCode === 0) {
             this.lstHostel = res.data.list;
-            this.totalPages = Math.ceil(res.data.total / 10);
+            this.totalPages = res.data.total;
           } else {
             this.lstHostel = [];
             this.toastrService.error(res.message);
@@ -50,6 +50,11 @@ export class ListHostelComponent implements OnInit, AfterViewInit {
         }
       );
   }
+  changePage(event$){
+    this.pageNumber = event$;
+    this.getLstHostel();
+  }
+  
   searchAdvanced() {
     const body = {
       title: (document.getElementById('title') as HTMLInputElement).value,
@@ -65,8 +70,7 @@ export class ListHostelComponent implements OnInit, AfterViewInit {
       .subscribe(
         (res: IResponse<any>) => {
           if (res.statusCode === 0) {
-            this.lstHostel = res.data.list;
-            this.totalPages = Math.ceil(res.data.total / 10);
+            this.lstHostel = res.data;
           } else {
             this.lstHostel = [];
             this.toastrService.error(res.message);

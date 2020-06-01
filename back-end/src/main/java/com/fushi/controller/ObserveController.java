@@ -1,6 +1,7 @@
 package com.fushi.controller;
 
 
+import com.fushi.dto.observe.ObserveDTO;
 import com.fushi.model.UserModel;
 import com.fushi.service.UserService;
 import com.fushi.util.PaginationRequest;
@@ -22,7 +23,7 @@ public class ObserveController {
 
 
     @PostMapping(path = "/register",produces="application/json", consumes = "application/json")
-    public Response<PaginationResponse<UserModel>> getAllBy(@RequestBody String email){
+    public Response<PaginationResponse<UserModel>> getAllBy(@RequestBody ObserveDTO email){
 
         return userService.observe(email);
     }

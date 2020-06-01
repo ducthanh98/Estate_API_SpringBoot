@@ -3,9 +3,11 @@ package com.fushi.serviceImpl;
 import com.fushi.config.Notifications;
 import com.fushi.dto.ResponseCode;
 import com.fushi.dto.auth.dto.ChangePassDTO;
+import com.fushi.dto.auth.dto.UserDTO;
 import com.fushi.dto.auth.dto.UserInfoDTO;
 import com.fushi.dto.auth.ro.AuthenticationInformation;
 import com.fushi.dto.auth.ro.UserRO;
+import com.fushi.dto.observe.ObserveDTO;
 import com.fushi.model.ReportTypeModel;
 import com.fushi.model.UserModel;
 import com.fushi.repository.UserRepository;
@@ -72,14 +74,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Response register(UserModel data) {
+    public Response register(UserDTO dto) {
         Response response = new Response();
         try{
 
-            var isExist = this.userRepository.existsByEmail(data.getEmail());
+            var isExist = this.userRepository.existsByEmail(dto.getEmail());
             if(isExist){
                 return response.setStatusCode(ResponseCode.ERROR).setMessage(Notifications.EMAIL_EXIST);
             }
+
+            UserModel data = modelMapper.map(dto, UserModel.class);
+
 
             UUID uuid = UUID.randomUUID();
             data.setCode(uuid.toString());
@@ -168,6 +173,35 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Response update(Integer id, UserDTO user) {
+        Response response = new Response();
+        try{
+
+            var account = this.userRepository.findById(id).get();
+            if(account == null){
+                return response.setStatusCode(ResponseCode.ERROR).setMessage(Notifications.ACCOUNT_NOT_EXIST);
+            }
+
+            account.setName(user.getName());
+            account.setPhone(user.getPhone());
+            account.setEmail(user.getEmail());
+            account.setPassword(user.getPassword());
+            account.setActive(user.getActive());
+            account.setRole(user.getRole());
+
+
+
+            userRepository.save(account);
+
+            return response.setStatusCode(ResponseCode.SUCCESS).setMessage(Notifications.SUCCESS);
+
+        }catch (Exception e){
+            logger.error(e.toString());
+            return response.setStatusCode(ResponseCode.ERROR).setMessage(Notifications.ERROR);
+        }
+    }
+
+    @Override
     public Response changePassword(Integer id, ChangePassDTO info) {
         Response response = new Response();
         try{
@@ -194,15 +228,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Response observe(String email) {
+    public Response observe(ObserveDTO dto) {
         Response response = new Response();
         try{
-            if(email.isEmpty()){
-                return response.setStatusCode(ResponseCode.ERROR).setMessage(Notifications.EMAIL_PASS_INCORRECT);
-
-            }
-
-            UserModel account = this.userRepository.findByEmail(email);
+            UserModel account = this.userRepository.findByEmail(dto.getEmail());
             if(account == null){
                 return response.setStatusCode(ResponseCode.ERROR).setMessage(Notifications.ACCOUNT_NOT_EXIST);
             }

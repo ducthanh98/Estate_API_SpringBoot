@@ -21,7 +21,7 @@ public class CommentModel {
     private String comments;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonBackReference
+    @JsonBackReference(value = "comments")
     private HouseModel post;
 
     @ManyToOne

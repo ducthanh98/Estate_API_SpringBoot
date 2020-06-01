@@ -219,7 +219,7 @@
                                             </div>
                                         </div>
                                         <div class="clearfix"></div>
-                                        <app-pagination></app-pagination>
+                                        <app-pagination [totalPages]="totalPages" (selectPage)="changePage($event)"></app-pagination>
                                     </div>
                                 </div>
                             </div>

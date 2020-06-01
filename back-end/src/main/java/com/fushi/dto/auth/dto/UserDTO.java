@@ -1,24 +1,15 @@
-package com.fushi.model;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+package com.fushi.dto.auth.dto;
+
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
-import java.util.List;
 
-
-@Entity
-@Table(name = "accounts")
-@JsonIgnoreProperties(value = {"reports"})
-public class UserModel {
-
-    @Id
-    @GeneratedValue(strategy= GenerationType.AUTO,generator="native")
-    @GenericGenerator(name = "native",strategy = "native")
-    @Column(name = "id")
-    private Integer id;
+public class UserDTO {
 
     @Column(name = "name",nullable = false)
     @NotEmpty(message = "Name is required")
@@ -37,45 +28,25 @@ public class UserModel {
     private String avatar="avatar.jpg";
 
     @Column(name = "phone")
-    private String phone="";
+    private String phone;
 
     @Column(name = "facebook")
-    private String facebook="";
+    private String facebook;
 
     @Column(name = "skype")
-    private String skype="";
+    private String skype;
 
     @Column(name = "role")
     private Integer role=3;
 
     @Column(name = "active")
-    private Boolean active=false;
+    private Boolean active;
 
     @Column(name = "subcribe")
-    private Boolean subcribe=false;
+    private Boolean subcribe;
 
     @Column(name = "code")
     private String code;
-
-    @OneToMany(mappedBy = "author",cascade = CascadeType.ALL)
-    @JsonBackReference
-    private List<ReportModel> reports;
-
-    @OneToMany(mappedBy = "author",cascade = CascadeType.ALL)
-    @JsonBackReference
-    private List<HouseModel> houses;
-
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
-    @JsonBackReference
-    private List<CommentModel> comments;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
@@ -163,29 +134,5 @@ public class UserModel {
 
     public void setCode(String code) {
         this.code = code;
-    }
-
-    public List<ReportModel> getReports() {
-        return reports;
-    }
-
-    public void setReports(List<ReportModel> reports) {
-        this.reports = reports;
-    }
-
-    public List<HouseModel> getHouses() {
-        return houses;
-    }
-
-    public void setHouses(List<HouseModel> houses) {
-        this.houses = houses;
-    }
-
-    public List<CommentModel> getComments() {
-        return comments;
-    }
-
-    public void setComments(List<CommentModel> comments) {
-        this.comments = comments;
     }
 }

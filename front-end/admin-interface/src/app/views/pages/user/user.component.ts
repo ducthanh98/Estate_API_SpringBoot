@@ -120,7 +120,7 @@ export class UserComponent implements OnInit, AfterViewInit {
         this.toastrService.error('Please fill all the field');
         return;
       }
-      url = `auth/create`;
+      url = `auth/register`;
 
       body = { ...this.userForm.value };
     } else {
@@ -142,6 +142,7 @@ export class UserComponent implements OnInit, AfterViewInit {
       }
     }
     body.active = body.active ? Active.active : Active.banned;
+    body.role = +body.role;
     this.commonService.doPost(url, body)
       .subscribe(
         (data: IResponse<any>) => {
