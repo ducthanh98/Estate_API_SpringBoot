@@ -3,10 +3,7 @@ package com.fushi.serviceImpl;
 import com.fushi.config.Notifications;
 import com.fushi.dto.ResponseCode;
 import com.fushi.dto.house.HouseDTO;
-import com.fushi.model.AmentitiesModel;
-import com.fushi.model.GalleryModel;
-import com.fushi.model.HouseModel;
-import com.fushi.model.UserModel;
+import com.fushi.model.*;
 import com.fushi.repository.AmentitiesRepository;
 import com.fushi.repository.HouseRepository;
 import com.fushi.repository.ReportRepository;
@@ -19,6 +16,10 @@ import com.fushi.util.Uploads;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -37,6 +38,49 @@ public class HouseServiceImpl implements HouseService {
 
     private final Logger logger = LoggerFactory.getLogger(HouseServiceImpl.class);
 
+
+    @Override
+    public Response<List<HouseModel>> getNewest() {
+        Response response = new Response<List<HouseModel>>();
+
+        try{
+
+            Pageable pageable = (Pageable) PageRequest.of(0,6, Sort.by(Sort.Direction.DESC,"created"));
+
+            List<HouseModel> list = this.houseRepository.findAll(pageable).getContent();
+
+            return response.setStatusCode(ResponseCode.SUCCESS).setMessage(Notifications.SUCCESS).setData(list);
+
+        } catch (Exception e){
+
+            logger.error(e.toString());
+            return response.setStatusCode(ResponseCode.ERROR).setMessage(Notifications.ERROR);
+
+        }
+    }
+
+    @Override
+    public Response<HouseModel> getByID(Integer id) {
+        Response response = new Response<HouseModel>();
+
+        try{
+
+
+            HouseModel houseModel = this.houseRepository.findById(id).get();
+
+            if(houseModel == null){
+                return response.setStatusCode(ResponseCode.ERROR).setMessage(Notifications.NOT_FOUND);
+            }
+
+            return response.setStatusCode(ResponseCode.SUCCESS).setMessage(Notifications.SUCCESS).setData(houseModel);
+
+        } catch (Exception e){
+
+            logger.error(e.toString());
+            return response.setStatusCode(ResponseCode.ERROR).setMessage(Notifications.ERROR);
+
+        }
+    }
 
     @Override
     public Response insert(HouseDTO houseDTO) {
@@ -106,6 +150,23 @@ public class HouseServiceImpl implements HouseService {
 
     @Override
     public Response<PaginationResponse<HouseModel>> getAllBy(PaginationRequest pagePaginationRequest) {
-        return null;
+        Response<PaginationResponse<HouseModel>> response = new  Response<PaginationResponse<HouseModel>>();
+
+        try{
+            Page<HouseModel> pagination = houseRepository.findAll(PageRequest.of(pagePaginationRequest.getPageNumber() - 1, pagePaginationRequest.getPageSize()));
+
+            PaginationResponse<HouseModel> list = new PaginationResponse<HouseModel>();
+            list.setList(pagination.getContent());
+            list.setTotal(pagination.getTotalPages());
+
+
+            return response.setStatusCode(ResponseCode.SUCCESS).setMessage(Notifications.SUCCESS).setData(list);
+
+        } catch (Exception e){
+
+            logger.error(e.toString());
+            return response.setStatusCode(ResponseCode.ERROR).setMessage(Notifications.ERROR);
+
+        }
     }
 }

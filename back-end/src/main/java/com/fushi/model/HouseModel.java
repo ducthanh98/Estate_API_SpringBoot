@@ -1,7 +1,8 @@
 package com.fushi.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.GenericGenerator;
-import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -59,23 +60,32 @@ public class HouseModel {
     @NotEmpty(message = "Description is required")
     private String description;
 
-    @CreatedDate
-    private Date createdDate;
+    private Date created;
+
+    @PrePersist
+    public void prePersist() {
+        this.created = new Date();
+    }
 
     @ManyToMany(fetch = FetchType.LAZY,mappedBy = "houses")
+    @JsonManagedReference
     private List<AmentitiesModel> amentities;
 
 
     @ManyToOne
+    @JsonManagedReference
     private UserModel author;
 
-    @OneToMany(mappedBy = "post",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "post",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<CommentModel> comments;
 
-    @OneToMany(mappedBy = "post",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "post",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<GalleryModel> images;
 
-    @OneToMany(mappedBy = "house",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "post",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @JsonBackReference
     private List<ReportModel> reports;
 
     public Integer getId() {
@@ -166,12 +176,12 @@ public class HouseModel {
         this.description = description;
     }
 
-    public Date getCreatedDate() {
-        return createdDate;
+    public Date getCreated() {
+        return created;
     }
 
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
+    public void setCreated(Date createdDate) {
+        this.created = createdDate;
     }
 
     public List<AmentitiesModel> getAmentities() {
@@ -213,4 +223,6 @@ public class HouseModel {
     public void setReports(List<ReportModel> reports) {
         this.reports = reports;
     }
+
+
 }

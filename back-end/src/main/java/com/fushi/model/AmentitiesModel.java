@@ -1,5 +1,6 @@
 package com.fushi.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -26,6 +27,7 @@ public class AmentitiesModel {
 
 
     @ManyToMany(fetch = FetchType.LAZY)
+    @JsonBackReference
     private List<HouseModel> houses;
 
 

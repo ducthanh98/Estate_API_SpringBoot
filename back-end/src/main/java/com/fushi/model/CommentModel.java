@@ -1,5 +1,7 @@
 package com.fushi.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -18,10 +20,12 @@ public class CommentModel {
     @NotEmpty(message = "Comment is required")
     private String comments;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonBackReference
     private HouseModel post;
 
     @ManyToOne
+    @JsonManagedReference
     private UserModel user;
 
     public Integer getId() {

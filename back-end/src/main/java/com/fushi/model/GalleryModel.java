@@ -1,5 +1,7 @@
 package com.fushi.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -19,7 +21,8 @@ public class GalleryModel {
     @NotEmpty(message = "Image Name is required")
     private String imgName;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonBackReference
     private HouseModel post;
 
     public Integer getId() {

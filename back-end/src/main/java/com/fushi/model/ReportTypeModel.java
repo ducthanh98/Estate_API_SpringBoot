@@ -1,5 +1,6 @@
 package com.fushi.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -20,6 +21,7 @@ public class ReportTypeModel {
     private String reportContent;
 
     @OneToMany(mappedBy = "reportType")
+    @JsonBackReference
     private List<ReportModel> reports;
 
     public Integer getId() {

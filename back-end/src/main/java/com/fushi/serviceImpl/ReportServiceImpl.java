@@ -2,10 +2,9 @@ package com.fushi.serviceImpl;
 
 import com.fushi.config.Notifications;
 import com.fushi.dto.ResponseCode;
-import com.fushi.model.AmentitiesModel;
-import com.fushi.model.ReportModel;
-import com.fushi.repository.AmentitiesRepository;
-import com.fushi.repository.ReportRepository;
+import com.fushi.dto.report.ReportDTO;
+import com.fushi.model.*;
+import com.fushi.repository.*;
 import com.fushi.service.ReportService;
 import com.fushi.util.PaginationRequest;
 import com.fushi.util.PaginationResponse;
@@ -21,15 +20,40 @@ import org.springframework.stereotype.Service;
 public class ReportServiceImpl implements ReportService {
     @Autowired
     private ReportRepository reportRepository;
+
+    @Autowired
+    private HouseRepository houseRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private ReportTypeRepository reportTypeRepository;
+
+
     private final Logger logger = LoggerFactory.getLogger(ReportServiceImpl.class);
 
 
     @Override
-    public Response insertOrUpdate(ReportModel report) {
+    public Response insert(ReportDTO dto) {
         Response response = new Response();
         try{
 
-            this.reportRepository.save(report);
+            HouseModel houseModel = houseRepository.findById(dto.getPostID()).get();
+            UserModel userModel = userRepository.findById(dto.getUserID()).get();
+            ReportTypeModel reportTypeModel = reportTypeRepository.findById(dto.getReportTypeID()).get();
+
+            if(houseModel == null || userModel == null || reportTypeModel == null){
+                return response.setStatusCode(ResponseCode.ERROR).setMessage(Notifications.NOT_FOUND);
+            }
+
+            ReportModel reportModel = new ReportModel();
+            reportModel.setAuthor(userModel);
+            reportModel.setReportType(reportTypeModel);
+            reportModel.setPost(houseModel);
+
+
+            this.reportRepository.save(reportModel);
 
             return response.setStatusCode(ResponseCode.SUCCESS).setMessage(Notifications.SUCCESS);
 
@@ -59,7 +83,7 @@ public class ReportServiceImpl implements ReportService {
         Response<PaginationResponse<ReportModel>> response = new  Response<PaginationResponse<ReportModel>>();
 
         try{
-            Page<ReportModel> pagination = reportRepository.findAll(PageRequest.of(pagePaginationRequest.getPageNumber(), pagePaginationRequest.getPageSize()));
+            Page<ReportModel> pagination = reportRepository.findAll(PageRequest.of(pagePaginationRequest.getPageNumber() - 1, pagePaginationRequest.getPageSize()));
 
             PaginationResponse<ReportModel> list = new PaginationResponse<ReportModel>();
             list.setList(pagination.getContent());

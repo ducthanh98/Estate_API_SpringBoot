@@ -1,5 +1,7 @@
 package com.fushi.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.CreatedDate;
 
@@ -20,17 +22,19 @@ public class ReportModel {
     private Date createdDate;
 
     @Column(name = "status",nullable = false)
-    @NotEmpty(message = "Status is required")
-    private Integer status;  // 0 chua xu li | 1 bao cao vi pham chinh xac | 2 bao cao sai
+    private Integer status = 0;  // 0 chua xu li | 1 bao cao vi pham chinh xac | 2 bao cao sai
 
     @ManyToOne
+    @JsonManagedReference
     private ReportTypeModel reportType;
 
     @ManyToOne
+    @JsonManagedReference
     private UserModel author;
 
     @ManyToOne
-    private HouseModel house;
+    @JsonManagedReference
+    private HouseModel post;
 
     public Integer getId() {
         return id;
@@ -70,5 +74,18 @@ public class ReportModel {
 
     public void setAuthor(UserModel author) {
         this.author = author;
+    }
+
+    public HouseModel getPost() {
+        return post;
+    }
+
+    public void setPost(HouseModel post) {
+        this.post = post;
+    }
+
+    @PrePersist
+    public void prePersist() {
+        this.createdDate = new Date();
     }
 }

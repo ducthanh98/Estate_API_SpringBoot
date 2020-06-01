@@ -1,4 +1,5 @@
 package com.fushi.model;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -55,12 +56,15 @@ public class UserModel {
     private String code;
 
     @OneToMany(mappedBy = "author",cascade = CascadeType.ALL)
+    @JsonBackReference
     private List<ReportModel> reports;
 
     @OneToMany(mappedBy = "author",cascade = CascadeType.ALL)
+    @JsonBackReference
     private List<HouseModel> houses;
 
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    @JsonBackReference
     private List<CommentModel> comments;
 
     public Integer getId() {

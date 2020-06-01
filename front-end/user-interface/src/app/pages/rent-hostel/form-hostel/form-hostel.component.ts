@@ -182,6 +182,7 @@ export class FormHostelComponent implements OnInit {
         formData.append(key, body[key]);
       }
     }
+
     // tslint:disable-next-line:prefer-for-of
     for (let i = 0; i < this.files.length; i++) {
       formData.append('files', this.files[i]);

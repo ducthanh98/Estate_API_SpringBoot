@@ -134,7 +134,9 @@ export class HostelDetailComponent implements OnInit, AfterViewInit {
     }
     const body = {
       comment: this.comment,
-      postId: this.id
+      postID: this.id,
+      userID : this.commonService.userInfo.id
+    
     }
     this.commonService.doPost(`comments/create`, body)
       .subscribe(
@@ -152,15 +154,16 @@ export class HostelDetailComponent implements OnInit, AfterViewInit {
         }
       );
   }
-  reportPost(reportTypeId) {
+  reportPost(reportTypeID) {
     if (!this.isLogged) {
       this.toastrService.error('Please login to report');
       this.router.navigate(['/auth/login']);
       return;
     }
     const body = {
-      reportTypeId,
-      postId: this.id
+      reportTypeID,
+      postID: this.id,
+      userID : this.commonService.userInfo.id
     }
     this.commonService.doPost(`admin/report/create`, body)
       .subscribe(
