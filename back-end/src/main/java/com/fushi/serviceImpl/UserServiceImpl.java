@@ -91,7 +91,7 @@ public class UserServiceImpl implements UserService {
             userRepository.save(data);
 
 
-            mailProvider.sendMail(data.getEmail(),data.getCode());
+            mailProvider.sendActiveMail(data.getEmail(),data.getCode());
             return response.setStatusCode(ResponseCode.SUCCESS).setMessage(Notifications.SUCCESS);
 
         }catch (Exception e){
@@ -130,7 +130,7 @@ public class UserServiceImpl implements UserService {
         Response<PaginationResponse<UserModel>> response = new  Response<PaginationResponse<UserModel>>();
 
         try{
-            Page<UserModel> pagination = userRepository.findAll(PageRequest.of(pagePaginationRequest.getPageNumber() - 1, pagePaginationRequest.getPageSize()));
+            Page<UserModel> pagination = userRepository.findAllByRoleNot(0,PageRequest.of(pagePaginationRequest.getPageNumber() - 1, pagePaginationRequest.getPageSize()));
 
             PaginationResponse<UserModel> list = new PaginationResponse<UserModel>();
             list.setList(pagination.getContent());

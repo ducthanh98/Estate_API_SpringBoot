@@ -56,7 +56,7 @@ public class HouseModel {
     @NotNull(message = "Price is required")
     private Float price;
 
-    @Column(name = "description",nullable = false)
+    @Column(name = "description",nullable = false,columnDefinition = "TEXT")
     @NotEmpty(message = "Description is required")
     private String description;
 

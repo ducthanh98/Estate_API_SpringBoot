@@ -66,7 +66,7 @@ export class ReportTypeComponent implements OnInit, AfterViewInit {
         (res: IResponse<ReportType>) => {
           if (res.statusCode === 0) {
             this.reportData = res.data.list;
-            this.totalPages = Math.ceil(res.data.total / 10);
+            this.totalPages = res.data.total;
           } else {
             this.reportData = [];
             this.toastrService.error(res.message);

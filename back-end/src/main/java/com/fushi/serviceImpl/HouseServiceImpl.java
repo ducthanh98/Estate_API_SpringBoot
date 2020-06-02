@@ -9,10 +9,7 @@ import com.fushi.repository.HouseRepository;
 import com.fushi.repository.ReportRepository;
 import com.fushi.repository.UserRepository;
 import com.fushi.service.HouseService;
-import com.fushi.util.PaginationRequest;
-import com.fushi.util.PaginationResponse;
-import com.fushi.util.Response;
-import com.fushi.util.Uploads;
+import com.fushi.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +32,10 @@ public class HouseServiceImpl implements HouseService {
 
     @Autowired
     private AmentitiesRepository amentitiesRepository;
+
+    @Autowired
+    private MailProvider mailProvider;
+
 
     private final Logger logger = LoggerFactory.getLogger(HouseServiceImpl.class);
 
@@ -128,7 +129,13 @@ public class HouseServiceImpl implements HouseService {
             houseModel.setImages(galleryModels);
             houseModel.setAuthor(userModel);
 
-            houseRepository.save(houseModel);
+            HouseModel house = houseRepository.save(houseModel);
+
+            List<UserModel> listUserModel = userRepository.findBySubcribe(true);
+
+            for(var user : listUserModel){
+                mailProvider.sendNewest(user.getEmail(),house.getId());
+            }
 
             return response.setStatusCode(ResponseCode.SUCCESS).setMessage(Notifications.SUCCESS).setData(Notifications.SUCCESS);
 
@@ -176,6 +183,7 @@ public class HouseServiceImpl implements HouseService {
 
         try{
             List<HouseModel> list = houseRepository.findAllByStatusAndTitleContainsAndLocationContainsAndAreaBetweenAndPriceBetweenAndBedroomsAndBathrooms(false,title,location,area,area2,price,price2,bedrooms,bathrooms);
+
 
 
             return response.setStatusCode(ResponseCode.SUCCESS).setMessage(Notifications.SUCCESS).setData(list);

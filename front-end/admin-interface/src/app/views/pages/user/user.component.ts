@@ -11,7 +11,7 @@ import { ToastrService } from 'ngx-toastr';
 
 enum Active {
   active = 1,
-  banned = 2,
+  inactive = 0,
 }
 @Component({
   selector: 'app-user',
@@ -75,7 +75,7 @@ export class UserComponent implements OnInit, AfterViewInit {
         (res: IResponse<Amentities>) => {
           if (res.statusCode === 0) {
             this.userData = res.data.list;
-            this.totalPages = Math.ceil(res.data.total / 10);
+            this.totalPages = res.data.total;
           } else {
             this.userData = [];
             this.toastrService.error(res.message);
@@ -97,7 +97,9 @@ export class UserComponent implements OnInit, AfterViewInit {
         email: data.email,
         phone: data.phone,
         role: data.role,
-        active: data.active === 1 ? true : false,
+        active: data.active == 1 ? true : false,
+        password: data.password,
+        re_password: data.password
       });
     }
   }
@@ -141,7 +143,7 @@ export class UserComponent implements OnInit, AfterViewInit {
         delete body.re_password;
       }
     }
-    body.active = body.active ? Active.active : Active.banned;
+    body.active = body.active ? Active.active : Active.inactive;
     body.role = +body.role;
     this.commonService.doPost(url, body)
       .subscribe(

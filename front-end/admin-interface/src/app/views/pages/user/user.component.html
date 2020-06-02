@@ -20,13 +20,12 @@
                 <td>{{data.name}}</td>
                 <td>{{data.email}}</td>
                 <td>{{data.phone}}</td>
-                <td *ngIf="data.role === '0'"> Admin </td>
-                <td *ngIf="data.role === '1'"> Subadmin </td>
-                <td *ngIf="data.role === '2'"> Broker </td>
-                <td *ngIf="data.role === '3'"> User </td>
-                <td *ngIf="data.active === 0"> Not active </td>
-                <td *ngIf="data.active === 1"> Active </td>
-                <td *ngIf="data.active === 2"> Banned </td>
+                <td *ngIf="data.role == '0'"> Admin </td>
+                <td *ngIf="data.role == '1'"> Subadmin </td>
+                <td *ngIf="data.role == '2'"> Broker </td>
+                <td *ngIf="data.role == '3'"> User </td>
+                <td *ngIf="data.active == 0"> Inactive </td>
+                <td *ngIf="data.active == 1"> Active </td>
                 <td>
                     <i class=" fa fa-lg mt-2 fa-edit icon-action" (click)="openModal(data.id)"></i> 
                 </td>

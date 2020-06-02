@@ -13,19 +13,42 @@ public class MailProvider {
     @Autowired
     private JavaMailSender sender;
 
-    public void sendMail(String email,String code) throws MessagingException {
+    public void sendActiveMail(String email,String code) throws MessagingException {
         MimeMessage message = sender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message,true,"utf-8");
 
         StringBuilder link = new StringBuilder();
-        link.append("<a href='http//:localhost:3000/api/auth/active/");
+        link.append("<a href='http://localhost:3000/api/auth/active/");
         link.append(code);
-        link.append("'>http//:localhost:3000/api/auth/active/");
+        link.append("'>http://localhost:3000/api/auth/active/");
         link.append(code);
         link.append("</a>");
 
 
         String htmlMsg = MailTemplate.EMAIL_CONFIRM_MSG_HEADER+"\n"
+                +link.toString()+"\n"
+                + MailTemplate.EMAIL_CONFIRM_MSG_FOOTER;
+        message.setContent(htmlMsg,"text/html");
+        helper.setTo(email);
+        helper.setSubject(MailTemplate.SUBJECT);
+
+
+        sender.send(message);
+    }
+
+    public void sendNewest(String email,Integer id) throws MessagingException {
+        MimeMessage message = sender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message,true,"utf-8");
+
+        StringBuilder link = new StringBuilder();
+        link.append("<a href='http://localhost:4200/pages/rent-hostel/hostel-detail/");
+        link.append(id.toString());
+        link.append("'>http://localhost:4200/pages/rent-hostel/hostel-detail/");
+        link.append(id.toString());
+        link.append("</a>");
+
+
+        String htmlMsg = MailTemplate.EMAIL_SUBCRIBE_MSG_HEADER+"\n"
                 +link.toString()+"\n"
                 + MailTemplate.EMAIL_CONFIRM_MSG_FOOTER;
         message.setContent(htmlMsg,"text/html");

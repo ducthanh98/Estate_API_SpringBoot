@@ -65,7 +65,7 @@ export class AmentitiesComponent implements OnInit, AfterViewInit {
         (res: IResponse<Amentities>) => {
           if (res.statusCode === 0) {
             this.amentitiesData = res.data.list;
-            this.totalPages = Math.ceil(res.data.total / 10);
+            this.totalPages = res.data.total;
           } else {
             this.amentitiesData = [];
             this.toastrService.error(res.message);

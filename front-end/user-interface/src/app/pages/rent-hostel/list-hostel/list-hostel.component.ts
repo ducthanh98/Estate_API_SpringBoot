@@ -63,8 +63,8 @@ export class ListHostelComponent implements OnInit, AfterViewInit {
       bathroom: +(document.getElementById('bathroom') as HTMLInputElement).value,
       minArea: +(document.getElementById('minArea') as HTMLInputElement).innerText,
       maxArea: +(document.getElementById('maxArea') as HTMLInputElement).innerText,
-      minPrice: +(document.getElementById('minPrice') as HTMLInputElement).innerText,
-      maxPrice: +(document.getElementById('maxPrice') as HTMLInputElement).innerText,
+      minPrice: +(document.getElementById('minPrice') as HTMLInputElement).innerText * 1000,
+      maxPrice: +(document.getElementById('maxPrice') as HTMLInputElement).innerText * 1000,
     };
     this.commonService.doPost<IResponse<any>>('rent-hostel/searchAdvanced', body)
       .subscribe(
