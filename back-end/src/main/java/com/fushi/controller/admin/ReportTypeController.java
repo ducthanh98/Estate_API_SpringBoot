@@ -1,5 +1,6 @@
 package com.fushi.controller.admin;
 
+import com.fushi.dto.reportType.ReportTypeDTO;
 import com.fushi.model.ReportTypeModel;
 import com.fushi.service.ReportTypeService;
 import com.fushi.util.PaginationRequest;
@@ -26,13 +27,13 @@ public class ReportTypeController {
     }
 
     @PostMapping(path = "/create",produces="application/json", consumes = "application/json")
-    public Response create(@Valid @RequestBody ReportTypeModel body){
+    public Response create(@Valid @RequestBody ReportTypeDTO body){
 
         return reportTypeService.insert(body);
     }
 
     @PostMapping(path = "/update/{id}",produces="application/json", consumes = "application/json")
-    public Response update(@Valid @RequestBody ReportTypeModel body,@PathVariable("id") Integer id){
+    public Response update(@Valid @RequestBody ReportTypeDTO body,@PathVariable("id") Integer id){
 
         return reportTypeService.update(body,id);
 

@@ -2,6 +2,7 @@ package com.fushi.serviceImpl;
 
 import com.fushi.config.Notifications;
 import com.fushi.dto.ResponseCode;
+import com.fushi.dto.reportType.ReportTypeDTO;
 import com.fushi.model.AmentitiesModel;
 import com.fushi.model.ReportTypeModel;
 import com.fushi.repository.AmentitiesRepository;
@@ -49,11 +50,12 @@ public class ReportTypeServiceImpl implements ReportTypeService {
     }
 
     @Override
-    public Response insert(ReportTypeModel reportType) {
+    public Response insert(ReportTypeDTO reportType) {
         Response response = new Response();
         try{
-
-            this.reportTypeRepository.save(reportType);
+            ReportTypeModel reportTypeModel = new ReportTypeModel();
+            reportTypeModel.setReportContent(reportType.getReportContent());
+            this.reportTypeRepository.save(reportTypeModel);
 
             return response.setStatusCode(ResponseCode.SUCCESS).setMessage(Notifications.SUCCESS);
 
@@ -64,7 +66,7 @@ public class ReportTypeServiceImpl implements ReportTypeService {
     }
 
     @Override
-    public Response update(ReportTypeModel model,Integer id) {
+    public Response update(ReportTypeDTO model,Integer id) {
         Response response = new Response();
         try{
 
